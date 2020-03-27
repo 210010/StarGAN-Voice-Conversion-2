@@ -34,7 +34,7 @@ class DownsampleBlock(nn.Module):
 
     def forward(self, x):
         # GLU
-        return self.conv_layer(x) * torch.sigmoid(self.conv_gated(x))
+        return self.conv_layer(x)  #* torch.sigmoid(self.conv_gated(x))
 
 
 class UpSampleBlock(nn.Module):
@@ -68,7 +68,7 @@ class UpSampleBlock(nn.Module):
 
     def forward(self, x):
         # GLU
-        return self.conv_layer(x) * torch.sigmoid(self.conv_gated(x))
+        return self.conv_layer(x)  #* torch.sigmoid(self.conv_gated(x))
 
 
 class ConditionalInstanceNormalisation(nn.Module):
@@ -351,7 +351,7 @@ class Discriminator(nn.Module):
     def forward(self, x, c, c_):
         c_onehot = torch.cat((c, c_), dim=1).to(self.device)
 
-        x = self.conv_layer_1(x) * torch.sigmoid(self.conv_gated_1(x))
+        x = self.conv_layer_1(x)  #* torch.sigmoid(self.conv_gated_1(x))
 
         x = self.down_sample_1(x)
         x = self.down_sample_2(x)

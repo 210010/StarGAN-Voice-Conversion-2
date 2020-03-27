@@ -144,14 +144,14 @@ class Generator(nn.Module):
                                              kernel_size=(5, 5),
                                              stride=(2, 2),
                                              padding=(2, 2),
-                                             bias=False)
+                                             bias=True)
 
         self.down_sample_2 = DownsampleBlock(dim_in=128,
                                              dim_out=512,
                                              kernel_size=(5, 5),
                                              stride=(2, 2),
                                              padding=(2, 2),
-                                             bias=False)
+                                             bias=True)
 
         # Reshape data.
 
@@ -236,7 +236,7 @@ class Generator(nn.Module):
                                        kernel_size=1,
                                        stride=1,
                                        padding=0,
-                                       bias=False)
+                                       bias=True)
 
         # Reshape data.
 
@@ -246,14 +246,14 @@ class Generator(nn.Module):
                                          kernel_size=(5, 5),
                                          stride=(1, 1),
                                          padding=2,
-                                         bias=False)
+                                         bias=True)
 
         self.up_sample_2 = UpSampleBlock(dim_in=128,
                                          dim_out=512,
                                          kernel_size=(5, 5),
                                          stride=(1, 1),
                                          padding=2,
-                                         bias=False)
+                                         bias=True)
 
         # TODO: final layer differs from paper
         self.out = nn.Conv2d(in_channels=64,
@@ -261,7 +261,7 @@ class Generator(nn.Module):
                              kernel_size=(5, 15),
                              stride=(1, 1),
                              padding=(2, 7),
-                             bias=False)
+                             bias=True)
 
     def forward(self, x, c_):
         width_size = x.size(3)
@@ -319,28 +319,28 @@ class Discriminator(nn.Module):
                                              kernel_size=(3, 3),
                                              stride=(2, 2),
                                              padding=1,
-                                             bias=False)
+                                             bias=True)
 
         self.down_sample_2 = DownsampleBlock(dim_in=128,
                                              dim_out=512,
                                              kernel_size=(3, 3),
                                              stride=(2, 2),
                                              padding=1,
-                                             bias=False)
+                                             bias=True)
 
         self.down_sample_3 = DownsampleBlock(dim_in=256,
                                              dim_out=1024,
                                              kernel_size=(3, 3),
                                              stride=(2, 2),
                                              padding=1,
-                                             bias=False)
+                                             bias=True)
 
         self.down_sample_4 = DownsampleBlock(dim_in=512,
                                              dim_out=1024,
                                              kernel_size=(1, 5),
                                              stride=(1, 1),
                                              padding=(0, 2),
-                                             bias=False)
+                                             bias=True)
 
         # Fully connected layer.
         self.fully_connected = nn.Linear(in_features=512, out_features=1)

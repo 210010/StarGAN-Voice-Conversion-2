@@ -34,7 +34,7 @@ class DownsampleBlock(nn.Module):
 
     def forward(self, x):
         # GLU
-        return self.conv_layer(x) * torch.sigmoid(self.conv_gated(x))
+        return self.conv_layer(x)  #* torch.sigmoid(self.conv_gated(x))
 
 
 class UpSampleBlock(nn.Module):
@@ -68,7 +68,7 @@ class UpSampleBlock(nn.Module):
 
     def forward(self, x):
         # GLU
-        return self.conv_layer(x) * torch.sigmoid(self.conv_gated(x))
+        return self.conv_layer(x)  #* torch.sigmoid(self.conv_gated(x))
 
 
 class ConditionalInstanceNormalisation(nn.Module):
@@ -134,7 +134,7 @@ class Generator(nn.Module):
 
         # Initial layers.
         self.conv_layer_1 = nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=128, kernel_size=(5, 15), stride=(1, 1), padding=(2, 7)),
+            nn.Conv2d(in_channels=1, out_channels=128, kernel_size=(5, 15), stride=(1, 1), padding=0),
             nn.GLU(dim=1)
         )
 
@@ -143,21 +143,21 @@ class Generator(nn.Module):
                                              dim_out=256,
                                              kernel_size=(5, 5),
                                              stride=(2, 2),
-                                             padding=(2, 2),
+                                             padding=0,
                                              bias=False)
 
         self.down_sample_2 = DownsampleBlock(dim_in=128,
                                              dim_out=512,
                                              kernel_size=(5, 5),
                                              stride=(2, 2),
-                                             padding=(2, 2),
+                                             padding=0,
                                              bias=False)
 
         # Reshape data.
 
         # Down-conversion layers.
         self.down_conversion = nn.Sequential(
-            nn.Conv1d(in_channels=2304,
+            nn.Conv1d(in_channels=8320,
                       out_channels=256,
                       kernel_size=1,
                       stride=1,
@@ -271,7 +271,7 @@ class Generator(nn.Module):
         x = self.down_sample_1(x)
         x = self.down_sample_2(x)
 
-        x = x.contiguous().view(-1, 2304, width_size // 4)
+        x = x.contiguous().view(-1, 8320, width_size // 4)
         x = self.down_conversion(x)
 
         x = self.residual_1(x, c_)
@@ -351,7 +351,7 @@ class Discriminator(nn.Module):
     def forward(self, x, c, c_):
         c_onehot = torch.cat((c, c_), dim=1).to(self.device)
 
-        x = self.conv_layer_1(x) * torch.sigmoid(self.conv_gated_1(x))
+        x = self.conv_layer_1(x)  #* torch.sigmoid(self.conv_gated_1(x))
 
         x = self.down_sample_1(x)
         x = self.down_sample_2(x)

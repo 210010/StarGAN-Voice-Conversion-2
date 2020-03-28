@@ -232,7 +232,7 @@ class Solver(object):
             # d_loss_real = - F.binary_cross_entropy_with_logits(input=d_out_src,
             #                                                    target=torch.ones_like(d_out_src, dtype=torch.float))
             d_loss_real = - torch.log(F.cross_entropy(input=d_out_src,
-                                                      target=torch.ones_like(d_out_src, dtype=torch.float)))
+                                                      target=torch.ones_like(d_out_src, dtype=torch.long)))
 
             # Compute loss with fake mc feats.
             mc_fake = self.generator(mc_real, spk_c_trg)
@@ -240,7 +240,7 @@ class Solver(object):
             # d_loss_fake = - F.binary_cross_entropy_with_logits(input=d_out_fake,
             #                                                    target=torch.zeros_like(d_out_fake, dtype=torch.float))
             d_loss_fake = - torch.log(F.cross_entropy(input=d_out_fake,
-                                                      target=torch.zeros_like(d_out_fake, dtype=torch.float)))
+                                                      target=torch.zeros_like(d_out_fake, dtype=torch.long)))
             d_loss = d_loss_real + d_loss_fake
 
             # TODO: look to include Wassertein GP later - original paper does not include this
@@ -270,7 +270,7 @@ class Solver(object):
                 mc_fake = self.generator(mc_real, spk_c_trg)
                 out_fake = self.discriminator(mc_fake, spk_c_org, spk_c_trg)
                 g_loss_fake = torch.log(F.cross_entropy(input=out_fake,
-                                                        target=torch.ones_like(out_fake, dtype=torch.float)))
+                                                        target=torch.ones_like(out_fake, dtype=torch.long)))
 
                 # Target-to-original domain.
                 mc_reconst = self.generator(mc_fake, spk_c_org)

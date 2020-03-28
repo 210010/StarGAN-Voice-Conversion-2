@@ -269,8 +269,8 @@ class Solver(object):
                 # Original-to-target domain.
                 mc_fake = self.generator(mc_real, spk_c_trg)
                 out_fake = self.discriminator(mc_fake, spk_c_org, spk_c_trg)
-                g_loss_fake = - torch.log(F.cross_entropy(input=out_fake,
-                                                          target=torch.ones_like(out_fake, dtype=torch.float)))
+                g_loss_fake = torch.log(F.cross_entropy(input=out_fake,
+                                                        target=torch.ones_like(out_fake, dtype=torch.float)))
 
                 # Target-to-original domain.
                 mc_reconst = self.generator(mc_fake, spk_c_org)

@@ -343,7 +343,7 @@ class Discriminator(nn.Module):
                                              bias=False)
 
         # Fully connected layer.
-        self.fully_connected = nn.Linear(in_features=512, out_features=1)
+        self.fully_connected = nn.Linear(in_features=512, out_features=self.num_speakers)
 
         # Projection.
         self.projection = nn.Linear(self.num_speakers * 2, 512)
@@ -414,6 +414,9 @@ if __name__ == '__main__':
     print(f'Shape in: {mc_real.shape}')
     dis_real = discriminator(mc_real, spk_c_org, spk_c_trg)
     print(f'Shape out: {dis_real.shape}')
+    print(torch.nn.functional.softmax(dis_real, dim=1))
+    print(spk_c_trg)
+    print(torch.nn.functional.binary_cross_entropy_with_logits(dis_real, spk_c_trg))
     print('------------------------')
 
     print('Testing Generator')

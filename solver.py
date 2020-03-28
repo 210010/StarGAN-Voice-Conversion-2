@@ -229,14 +229,14 @@ class Solver(object):
 
             # Compute loss with real mc feats.
             d_out_src = self.discriminator(mc_real, spk_c_org, spk_c_trg)
-            d_loss_real = - F.binary_cross_entropy_with_logits(input=torch.log(d_out_src),
-                                                               target=torch.ones_like(torch.log(d_out_src), dtype=torch.float))
+            d_loss_real = - F.binary_cross_entropy_with_logits(input=d_out_src,
+                                                               target=torch.ones_like(d_out_src, dtype=torch.float))
 
             # Compute loss with fake mc feats.
             mc_fake = self.generator(mc_real, spk_c_trg)
             d_out_fake = self.discriminator(mc_fake.detach(), spk_c_org, spk_c_trg)
-            d_loss_fake = - F.binary_cross_entropy_with_logits(input=torch.log(d_out_fake),
-                                                               target=torch.zeros_like(torch.log(d_out_fake), dtype=torch.float))
+            d_loss_fake = - F.binary_cross_entropy_with_logits(input=d_out_fake,
+                                                               target=torch.zeros_like(d_out_fake, dtype=torch.float))
 
             d_loss = d_loss_real + d_loss_fake
 
@@ -266,8 +266,8 @@ class Solver(object):
                 # Original-to-target domain.
                 mc_fake = self.generator(mc_real, spk_c_trg)
                 out_fake = self.discriminator(mc_fake, spk_c_org, spk_c_trg)
-                g_loss_fake = F.binary_cross_entropy_with_logits(input=torch.log(out_fake),
-                                                                 target=torch.ones_like(torch.log(out_fake), dtype=torch.float))
+                g_loss_fake = F.binary_cross_entropy_with_logits(input=out_fake,
+                                                                 target=torch.ones_like(out_fake, dtype=torch.float))
 
                 # Target-to-original domain.
                 mc_reconst = self.generator(mc_fake, spk_c_org)
